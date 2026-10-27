@@ -1,0 +1,650 @@
+/* ==========================================================================
+   style.css
+   Mises en page et composants par page : hero, cartes, avis, à propos, contact.
+   S'appuie sur les tokens définis dans global.css.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Surfaces vitrées (cartes, panneaux, mise en avant, appel à l'action)
+   Fond à 0,9 d'opacité + flou de 20px sur le dégradé de la page.
+   -------------------------------------------------------------------------- */
+.card,
+.panel,
+.spotlight,
+.cta {
+  background: rgb(var(--md-surface-rgb) / var(--md-surface-alpha));
+  -webkit-backdrop-filter: blur(var(--md-blur));
+  backdrop-filter: blur(var(--md-blur));
+  border: 1px solid var(--md-outline);
+  border-radius: var(--md-shape-lg);
+  box-shadow: var(--md-elev-1);
+}
+
+.panel {
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+/* --------------------------------------------------------------------------
+   2. Éléments partagés : sections, puces, notes
+   -------------------------------------------------------------------------- */
+.section {
+  padding-block: clamp(1.5rem, 4vw, 3rem);
+}
+
+.section__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.page-hero {
+  padding-block: clamp(2rem, 6vw, 4rem) clamp(0.5rem, 2vw, 1rem);
+}
+
+.page-hero__lead {
+  max-width: 40rem;
+  margin-top: 1rem;
+  color: var(--md-on-surface-variant);
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.75rem;
+  padding: 0.125rem 0.75rem;
+  border-radius: var(--md-shape-full);
+  background: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
+  font-size: var(--md-label-md);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.chip--tonal {
+  background: var(--md-primary-container);
+  color: var(--md-on-primary-container);
+}
+
+/* --------------------------------------------------------------------------
+   3. Accueil : hero
+   -------------------------------------------------------------------------- */
+.hero {
+  position: relative;
+  isolation: isolate;
+  padding-block: clamp(2rem, 7vw, 5rem);
+}
+
+/* Soft glow that follows the pointer (set by index.js) */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    28rem circle at var(--hero-x, 75%) var(--hero-y, 30%),
+    var(--md-glow),
+    transparent 65%
+  );
+}
+
+.hero__inner {
+  display: grid;
+  gap: clamp(1.5rem, 5vw, 3rem);
+  align-items: center;
+}
+
+.hero__text {
+  display: grid;
+  justify-items: start;
+  gap: 1.25rem;
+}
+
+.hero__lead {
+  max-width: 36rem;
+  color: var(--md-on-surface-variant);
+  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.25rem);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.spotlight {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  text-align: center;
+}
+
+.spotlight__label {
+  color: var(--md-on-surface-variant);
+  font-size: var(--md-label-lg);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.controller {
+  width: min(100%, 15rem);
+  height: auto;
+}
+
+.controller__body {
+  fill: var(--md-primary);
+}
+
+.controller__detail {
+  fill: #ffffff;
+}
+
+.spotlight__title {
+  font-size: var(--md-title-lg);
+}
+
+/* Circular score indicator drawn with a conic gradient */
+.score-ring {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 6rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: conic-gradient(var(--md-primary) calc(var(--value, 0) * 1%), var(--md-secondary) 0);
+}
+
+.score-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0.5rem;
+  border-radius: 50%;
+  background: rgb(var(--md-surface-rgb));
+}
+
+.score-ring__text {
+  position: relative;
+  color: var(--md-on-surface);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.score-ring__text small {
+  color: var(--md-on-surface-variant);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+@media (min-width: 1024px) {
+  .hero__inner {
+    grid-template-columns: 1.25fr 1fr;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4. Cards and review grid
+   -------------------------------------------------------------------------- */
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 600px) {
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .card-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.card:hover {
+  box-shadow: var(--md-elev-2);
+}
+
+.card:target {
+  outline: 3px solid var(--md-primary-text);
+  outline-offset: 3px;
+}
+
+/* Cover placeholder: CSS gradient + inline SVG motif */
+.card__cover {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(135deg, var(--cover-a, #7643e4), var(--cover-b, #1f1147));
+}
+
+.card__art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: rgb(255 255 255 / 0.85);
+}
+
+.card__cover--1 { --cover-a: #7643e4; --cover-b: #1f1147; }
+.card__cover--2 { --cover-a: #9b79ee; --cover-b: #4a28a0; }
+.card__cover--3 { --cover-a: #4a28a0; --cover-b: #0c0c0c; }
+.card__cover--4 { --cover-a: #2f2f2f; --cover-b: #7643e4; }
+.card__cover--5 { --cover-a: #8a8a8a; --cover-b: #5b2fc0; }
+.card__cover--6 { --cover-a: #5b2fc0; --cover-b: #2f2f2f; }
+
+.card__score {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.125rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--md-shape-full);
+  background: rgb(var(--md-surface-rgb) / var(--md-surface-alpha));
+  -webkit-backdrop-filter: blur(var(--md-blur));
+  backdrop-filter: blur(var(--md-blur));
+  box-shadow: var(--md-elev-1);
+  color: var(--md-on-surface-variant);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.card__score strong {
+  color: var(--md-primary-text);
+  font-size: 1.25rem;
+}
+
+.card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.875rem;
+  padding: 1.25rem;
+}
+
+.card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card__comment {
+  color: var(--md-on-surface-variant);
+  font-size: var(--md-body-md);
+}
+
+.card__link {
+  align-self: flex-start;
+  margin: auto 0 -0.5rem -0.75rem;
+}
+
+.card--crow-master .card__cover {
+  background: linear-gradient(135deg, #08090d, #2d2d34);
+}
+
+.card__cover--crow {
+  --cover-a: #0d1117;
+  --cover-b: #454a56;
+}
+
+.card__toggle {
+  align-self: flex-start;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.modal.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 0.7);
+}
+
+.modal__panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 32rem);
+  display: grid;
+  gap: 1rem;
+  padding: 1.5rem;
+  border: 1px solid var(--md-outline);
+  border-radius: var(--md-shape-lg);
+  background: var(--md-bg);
+  box-shadow: var(--md-elev-3);
+}
+
+.modal__close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--md-outline);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--md-on-surface);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.modal__description,
+.modal__list {
+  color: var(--md-on-surface-variant);
+}
+
+.modal__list {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* Atouts / inconvénients */
+.verdict {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 1rem;
+}
+
+.verdict__title {
+  margin-bottom: 0.375rem;
+  color: var(--md-on-surface);
+  font-size: var(--md-label-lg);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.verdict__list {
+  display: grid;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--md-body-md);
+}
+
+.verdict__list li {
+  position: relative;
+  padding-left: 1.375rem;
+}
+
+.verdict__list li::before {
+  position: absolute;
+  left: 0;
+  font-weight: 700;
+  color: var(--md-primary-text);
+}
+
+.verdict__list--pros li::before {
+  content: "+";
+  content: "+" / "";
+}
+
+.verdict__list--cons li::before {
+  content: "\2212";
+  content: "\2212" / "";
+}
+
+/* Scroll reveal (class added by index.js only when motion is allowed) */
+.reveal {
+  opacity: 0;
+  transform: translateY(1rem);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* --------------------------------------------------------------------------
+   5. Call to action
+   -------------------------------------------------------------------------- */
+.cta {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+  padding: clamp(1.5rem, 5vw, 3rem);
+  background-image: linear-gradient(135deg, var(--md-primary-container), transparent 70%);
+}
+
+.cta p {
+  max-width: 36rem;
+  color: var(--md-on-surface-variant);
+}
+
+/* --------------------------------------------------------------------------
+   6. À propos
+   -------------------------------------------------------------------------- */
+.about {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.profile {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.profile__avatar {
+  width: 8rem;
+  height: 8rem;
+  border-radius: 50%;
+  box-shadow: var(--md-elev-1);
+}
+
+.profile__role {
+  color: var(--md-on-surface-variant);
+}
+
+.facts {
+  display: grid;
+  gap: 0.75rem;
+  width: 100%;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--md-outline);
+  text-align: left;
+}
+
+.facts dt {
+  color: var(--md-on-surface-variant);
+  font-size: var(--md-label-md);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.facts dd {
+  margin-top: 0.125rem;
+}
+
+.prose {
+  display: grid;
+  gap: 1rem;
+}
+
+.prose h2 {
+  margin-top: 0.75rem;
+}
+
+.prose h2:first-child {
+  margin-top: 0;
+}
+
+.prose p {
+  max-width: 42rem;
+}
+
+.scale {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.scale li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.scale strong {
+  flex: none;
+  min-width: 4.5rem;
+  color: var(--md-primary-text);
+}
+
+@media (min-width: 1024px) {
+  .about {
+    grid-template-columns: minmax(16rem, 1fr) 2.2fr;
+  }
+
+  .profile {
+    position: sticky;
+    top: calc(var(--header-h) + 1.5rem);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   7. Formulaire de contact
+   -------------------------------------------------------------------------- */
+.contact {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.form {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.375rem;
+}
+
+.field__label {
+  font-weight: 700;
+}
+
+.field__hint {
+  color: var(--md-on-surface-variant);
+  font-size: var(--md-label-md);
+}
+
+.field__control {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--md-outline-strong);
+  border-radius: var(--md-shape-md);
+  background: var(--md-bg);
+  color: var(--md-on-surface);
+}
+
+textarea.field__control {
+  min-height: 9rem;
+  resize: vertical;
+}
+
+/* Invalid state: thicker border plus a text message, not colour alone */
+.field__control[aria-invalid="true"] {
+  border-color: var(--md-on-surface);
+  box-shadow: inset 0 0 0 1px var(--md-on-surface);
+}
+
+.field__error {
+  color: var(--md-on-surface);
+  font-size: var(--md-body-md);
+  font-weight: 700;
+}
+
+.field__error::before {
+  content: "Error: ";
+  color: var(--md-primary-text);
+}
+
+.form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+.form-status {
+  padding: 1rem 1.25rem;
+  border-radius: var(--md-shape-md);
+  background: var(--md-primary-container);
+  color: var(--md-on-primary-container);
+  font-weight: 700;
+}
+
+.form-status:empty {
+  display: none;
+}
+
+.info-list {
+  display: grid;
+  gap: 1rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--md-on-surface-variant);
+}
+
+.info-list strong {
+  display: block;
+  color: var(--md-on-surface);
+}
+
+@media (min-width: 1024px) {
+  .contact {
+    grid-template-columns: 1.6fr 1fr;
+  }
+}

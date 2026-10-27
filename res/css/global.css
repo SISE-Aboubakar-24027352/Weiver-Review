@@ -1,0 +1,695 @@
+/* ==========================================================================
+   global.css
+   Design tokens (Material Design 3 inspired), reset, typography,
+   theme tokens and shared components: header, navigation, buttons, footer.
+   Font: Arial only. Breakpoints: 600px and 1024px (mobile-first).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Tokens that do not depend on the theme
+   -------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  /* Brand colour (identical in both themes) */
+  --md-primary: #7643e4;
+  --md-on-primary: #ffffff;           /* contrast on primary: 5.7:1 (AA) */
+  --md-primary-hover: #683bc9;        /* primary mixed with 12% black */
+
+  /* Shape scale */
+  --md-shape-sm: 0.5rem;
+  --md-shape-md: 0.75rem;
+  --md-shape-lg: 1.25rem;
+  --md-shape-full: 999px;
+
+  /* Elevation (shadow part; the tint comes from the surface colours) */
+  --md-elev-1: 0 1px 2px rgb(0 0 0 / 0.3), 0 1px 3px 1px rgb(0 0 0 / 0.15);
+  --md-elev-2: 0 1px 2px rgb(0 0 0 / 0.3), 0 2px 6px 2px rgb(0 0 0 / 0.15);
+  --md-elev-3: 0 4px 8px 3px rgb(0 0 0 / 0.15), 0 1px 3px rgb(0 0 0 / 0.3);
+
+  /* Surface glass effect: 0.9 opacity + 20px blur (see components) */
+  --md-surface-alpha: 0.9;
+  --md-blur: 20px;
+
+  /* State layers derived from the primary colour */
+  --md-state-hover: rgb(118 67 228 / 0.12);
+
+  /* Layout */
+  --header-h: 4rem;
+  --gutter: clamp(1rem, 4vw, 2rem);
+  --container-max: 72rem;
+
+  /* M3 type scale (fluid where it matters) */
+  --md-display: clamp(2.25rem, 1.5rem + 3.6vw, 3.5rem);
+  --md-headline: clamp(1.5rem, 1.2rem + 1.4vw, 2rem);
+  --md-title-lg: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
+  --md-title-md: 1rem;
+  --md-body-lg: 1rem;
+  --md-body-md: 0.9375rem;
+  --md-label-lg: 0.9375rem;
+  --md-label-md: 0.8125rem;
+}
+
+/* --------------------------------------------------------------------------
+   2. Theme tokens
+   Light is the base. The dark block overrides colour roles only.
+   -------------------------------------------------------------------------- */
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --md-bg: #f2f2f2;                    /* main background */
+  --md-secondary: #c0c0c0;             /* secondary surfaces, borders, outlines */
+  --md-surface-rgb: 236 233 241;       /* #f2f2f2 with a 5% primary tint */
+  --md-on-surface: #121212;
+  --md-on-surface-variant: #3d3d3d;
+  --md-outline: #c0c0c0;
+  --md-outline-strong: #767676;        /* form controls: >= 3:1 non-text contrast */
+
+  --md-primary-text: #4f26b0;          /* primary as text/focus ring on light: >= 4.9:1 */
+  --md-primary-container: #d9cfef;
+  --md-on-primary-container: #2a0f66;
+  --md-secondary-container: #c0c0c0;
+  --md-on-secondary-container: #121212;
+
+  --md-glow: rgb(118 67 228 / 0.28);   /* gradient behind the glass surfaces */
+  --md-disabled-bg: rgb(18 18 18 / 0.12);
+  --md-disabled-fg: rgb(18 18 18 / 0.38);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --md-bg: #0c0c0c;
+  --md-secondary: #2f2f2f;
+  --md-surface-rgb: 30 28 38;          /* #2f2f2f/#0c0c0c blend with a primary tint */
+  --md-on-surface: #f2f2f2;
+  --md-on-surface-variant: #c0c0c0;
+  --md-outline: #2f2f2f;
+  --md-outline-strong: #8a8a8a;
+
+  --md-primary-text: #b498f0;          /* primary mixed with 45% white: 8:1 on #0c0c0c */
+  --md-primary-container: #41345c;
+  --md-on-primary-container: #e6dcfc;
+  --md-secondary-container: #2f2f2f;
+  --md-on-secondary-container: #f2f2f2;
+
+  --md-primary-hover: #8152e6;         /* primary mixed with 8% white (white text 4.9:1) */
+  --md-glow: rgb(118 67 228 / 0.34);
+  --md-disabled-bg: rgb(242 242 242 / 0.12);
+  --md-disabled-fg: rgb(242 242 242 / 0.38);
+}
+
+/* --------------------------------------------------------------------------
+   3. Reset and base typography
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+  font-size: var(--md-body-lg);
+  line-height: 1.5;
+  color: var(--md-on-surface);
+  background-color: var(--md-bg);
+}
+
+/* Soft gradient behind every page so the glass blur is visible */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(40rem circle at 10% 0%, var(--md-glow), transparent 60%),
+    radial-gradient(36rem circle at 100% 35%, var(--md-glow), transparent 60%),
+    radial-gradient(44rem circle at 20% 100%, var(--md-glow), transparent 60%);
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+main:focus {
+  outline: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+dl,
+dd,
+figure {
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: inherit;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: var(--md-display);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: var(--md-headline);
+  line-height: 1.25;
+}
+
+h3 {
+  font-size: var(--md-title-lg);
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: var(--md-title-md);
+}
+
+ul[role="list"],
+.list-reset {
+  list-style: none;
+  padding: 0;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: var(--md-primary-text);
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Visible focus for every interactive element */
+:focus-visible {
+  outline: 3px solid var(--md-primary-text);
+  outline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   4. Utilities
+   -------------------------------------------------------------------------- */
+.container {
+  width: min(100% - 2 * var(--gutter), var(--container-max));
+  margin-inline: auto;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: -4rem;
+  left: 0.75rem;
+  z-index: 1000;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--md-shape-full);
+  background: var(--md-primary);
+  color: var(--md-on-primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 0.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   5. Buttons (M3: filled, tonal, outlined, text)
+   -------------------------------------------------------------------------- */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0.5rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: var(--md-shape-full);
+  font-size: var(--md-label-lg);
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.button--filled {
+  background: var(--md-primary);
+  color: var(--md-on-primary);
+}
+
+.button--filled:hover {
+  background: var(--md-primary-hover);
+  box-shadow: var(--md-elev-1);
+  text-decoration: none;
+}
+
+.button--tonal {
+  background: var(--md-primary-container);
+  color: var(--md-on-primary-container);
+}
+
+.button--tonal:hover {
+  box-shadow: var(--md-elev-1);
+  text-decoration: none;
+}
+
+.button--outlined {
+  border-color: var(--md-outline-strong);
+  color: var(--md-primary-text);
+}
+
+.button--outlined:hover {
+  background: var(--md-state-hover);
+  text-decoration: none;
+}
+
+.button--text {
+  min-height: 2.75rem;
+  padding-inline: 0.75rem;
+  color: var(--md-primary-text);
+}
+
+.button--text:hover {
+  background: var(--md-state-hover);
+  text-decoration: none;
+}
+
+.button:disabled,
+.button[aria-disabled="true"] {
+  background: var(--md-disabled-bg);
+  color: var(--md-disabled-fg);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* --------------------------------------------------------------------------
+   6. Header and navigation
+   The glass layer is a pseudo-element so the fixed drawer (a descendant of
+   the header) is not trapped inside a backdrop-filter containing block.
+   -------------------------------------------------------------------------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  isolation: isolate;
+}
+
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgb(var(--md-surface-rgb) / var(--md-surface-alpha));
+  -webkit-backdrop-filter: blur(var(--md-blur));
+  backdrop-filter: blur(var(--md-blur));
+  border-bottom: 1px solid var(--md-outline);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: var(--header-h);
+}
+
+/* Brand */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: 3rem;
+  color: var(--md-on-surface);
+  font-size: 1.125rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.brand:hover {
+  text-decoration: none;
+}
+
+.brand__logo {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.625rem;
+}
+
+/* Hamburger button (< 1024px) */
+.nav-toggle {
+  position: relative;
+  flex: none;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--md-shape-full);
+  background: transparent;
+  color: var(--md-on-surface);
+}
+
+.nav-toggle:hover {
+  background: var(--md-state-hover);
+}
+
+.nav-toggle__bar {
+  position: absolute;
+  left: 0.75rem;
+  width: 1.5rem;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+.nav-toggle__bar:nth-child(1) {
+  top: 1.0625rem;
+}
+
+.nav-toggle__bar:nth-child(2) {
+  top: 1.4375rem;
+}
+
+.nav-toggle__bar:nth-child(3) {
+  top: 1.8125rem;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(1) {
+  transform: translateY(0.375rem) rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(3) {
+  transform: translateY(-0.375rem) rotate(-45deg);
+}
+
+/* Drawer (mobile): slides in from the right under the header */
+.site-nav {
+  position: fixed;
+  top: var(--header-h);
+  right: 0;
+  bottom: 0;
+  width: min(20rem, 85vw);
+  padding: 1rem;
+  overflow-y: auto;
+  background: rgb(var(--md-surface-rgb) / var(--md-surface-alpha));
+  -webkit-backdrop-filter: blur(var(--md-blur));
+  backdrop-filter: blur(var(--md-blur));
+  border-inline-start: 1px solid var(--md-outline);
+  box-shadow: var(--md-elev-3);
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform 0.25s ease, visibility 0s linear 0.25s;
+}
+
+.site-nav.is-open {
+  transform: none;
+  visibility: visible;
+  transition: transform 0.25s ease, visibility 0s;
+}
+
+.site-nav__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-nav__link {
+  display: flex;
+  align-items: center;
+  min-height: 3rem;
+  padding: 0 1.25rem;
+  border-radius: var(--md-shape-full);
+  color: var(--md-on-surface);
+  font-size: var(--md-label-lg);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.site-nav__link:hover {
+  background: var(--md-state-hover);
+  text-decoration: none;
+}
+
+.site-nav__link[aria-current="page"] {
+  background: var(--md-primary-container);
+  color: var(--md-on-primary-container);
+}
+
+.site-nav__tools {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--md-outline);
+}
+
+/* Theme toggle: shows a moon in light mode, a sun in dark mode */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 3rem;
+  padding: 0 1.25rem;
+  border: 1px solid var(--md-outline-strong);
+  border-radius: var(--md-shape-full);
+  background: transparent;
+  color: var(--md-on-surface);
+  font-size: var(--md-label-lg);
+  font-weight: 700;
+}
+
+.theme-toggle:hover {
+  background: var(--md-state-hover);
+}
+
+.theme-toggle__icon {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.theme-toggle__icon--sun,
+:root[data-theme="dark"] .theme-toggle__icon--moon {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle__icon--sun {
+  display: block;
+}
+
+/* Desktop (>= 1024px): horizontal top bar, no hamburger */
+@media (min-width: 1024px) {
+  .nav-toggle {
+    display: none;
+  }
+
+  .site-nav {
+    position: static;
+    width: auto;
+    margin-inline-start: auto;
+    padding: 0;
+    overflow: visible;
+    background: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border: 0;
+    box-shadow: none;
+    transform: none;
+    visibility: visible;
+    transition: none;
+  }
+
+  .site-nav__list {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .site-nav__tools {
+    margin: 0 0 0 0.5rem;
+    padding: 0;
+    border: 0;
+  }
+
+  .theme-toggle {
+    justify-content: center;
+    width: 3rem;
+    padding: 0;
+  }
+
+  /* Label stays available to screen readers */
+  .theme-toggle__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   7. Footer
+   -------------------------------------------------------------------------- */
+.site-footer {
+  margin-top: clamp(2rem, 5vw, 4rem);
+  background: rgb(var(--md-surface-rgb) / var(--md-surface-alpha));
+  -webkit-backdrop-filter: blur(var(--md-blur));
+  backdrop-filter: blur(var(--md-blur));
+  border-top: 1px solid var(--md-outline);
+  color: var(--md-on-surface-variant);
+  font-size: var(--md-body-md);
+}
+
+.site-footer__inner {
+  display: grid;
+  gap: 2rem;
+  padding-block: 2.5rem 1.5rem;
+}
+
+.site-footer__brand {
+  margin-bottom: 0.5rem;
+  color: var(--md-on-surface);
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.site-footer__title {
+  margin-bottom: 0.5rem;
+  color: var(--md-on-surface);
+  font-size: var(--md-title-md);
+}
+
+.site-footer__list {
+  display: grid;
+  gap: 0.125rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-footer__list a {
+  display: inline-block;
+  padding-block: 0.375rem;
+  color: var(--md-on-surface-variant);
+}
+
+.site-footer__list a:hover {
+  color: var(--md-primary-text);
+}
+
+.site-footer__legal {
+  padding-block: 1rem 2rem;
+  border-top: 1px solid var(--md-outline);
+  font-size: var(--md-label-md);
+}
+
+@media (min-width: 600px) {
+  .site-footer__inner {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .site-footer__about {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .site-footer__inner {
+    grid-template-columns: 1.5fr 1fr 1fr;
+  }
+
+  .site-footer__about {
+    grid-column: auto;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   8. Reduced motion
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}
