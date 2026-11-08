@@ -237,15 +237,11 @@
   inset: 0;
   width: 100%;
   height: 100%;
+  object-fit: cover;
   color: rgb(255 255 255 / 0.85);
 }
 
-.card__cover--1 { --cover-a: #7643e4; --cover-b: #1f1147; }
-.card__cover--2 { --cover-a: #9b79ee; --cover-b: #4a28a0; }
-.card__cover--3 { --cover-a: #4a28a0; --cover-b: #0c0c0c; }
 .card__cover--4 { --cover-a: #2f2f2f; --cover-b: #7643e4; }
-.card__cover--5 { --cover-a: #8a8a8a; --cover-b: #5b2fc0; }
-.card__cover--6 { --cover-a: #5b2fc0; --cover-b: #2f2f2f; }
 
 .card__score {
   position: absolute;
@@ -387,50 +383,12 @@
   gap: 0.75rem;
 }
 
-/* Atouts / inconvénients */
-.verdict {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
-  gap: 1rem;
-}
-
 .verdict__title {
   margin-bottom: 0.375rem;
   color: var(--md-on-surface);
   font-size: var(--md-label-lg);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-}
-
-.verdict__list {
-  display: grid;
-  gap: 0.375rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: var(--md-body-md);
-}
-
-.verdict__list li {
-  position: relative;
-  padding-left: 1.375rem;
-}
-
-.verdict__list li::before {
-  position: absolute;
-  left: 0;
-  font-weight: 700;
-  color: var(--md-primary-text);
-}
-
-.verdict__list--pros li::before {
-  content: "+";
-  content: "+" / "";
-}
-
-.verdict__list--cons li::before {
-  content: "\2212";
-  content: "\2212" / "";
 }
 
 /* Scroll reveal (class added by index.js only when motion is allowed) */
