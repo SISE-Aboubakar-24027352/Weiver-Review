@@ -278,6 +278,11 @@
   padding: 1.25rem;
 }
 
+.section[aria-label="Avis"] .card__body {
+  gap: 0.625rem;
+  padding: 1rem;
+}
+
 .card__meta {
   display: flex;
   flex-wrap: wrap;
@@ -338,6 +343,9 @@
   position: relative;
   z-index: 1;
   width: min(100%, 32rem);
+  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
   display: grid;
   gap: 1rem;
   padding: 1.5rem;
