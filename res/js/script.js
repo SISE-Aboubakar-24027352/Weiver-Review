@@ -72,50 +72,55 @@
     });
   }
 
-  var crowModal = document.getElementById('crow-master-modal');
-  if (crowModal) {
-    var openCrowModalButtons = document.querySelectorAll('[data-open-crow-modal]');
-    var closeCrowModalButtons = document.querySelectorAll('[data-close-crow-modal]');
-    var setCrowModalOpen = function (open) {
-      crowModal.classList.toggle('is-visible', open);
-      crowModal.setAttribute('aria-hidden', String(!open));
+  function setupModal(modalId, openSelector, closeSelector) {
+    var modal = document.getElementById(modalId);
+    if (!modal) {
+      return;
+    }
+
+    var setModalOpen = function (open) {
+      modal.classList.toggle('is-visible', open);
+      modal.setAttribute('aria-hidden', String(!open));
       document.body.classList.toggle('modal-open', open);
       if (open) {
-        var closeButton = crowModal.querySelector('[data-close-crow-modal]');
+        var closeButton = modal.querySelector(closeSelector);
         if (closeButton) {
           closeButton.focus();
         }
       }
     };
 
-    openCrowModalButtons.forEach(function (button) {
+    document.querySelectorAll(openSelector).forEach(function (button) {
       button.addEventListener('click', function (event) {
         if (event.target && event.target.closest('a, button')) {
           event.preventDefault();
         }
-        setCrowModalOpen(true);
+        setModalOpen(true);
       });
 
       button.addEventListener('keydown', function (event) {
         if ((event.key === 'Enter' || event.key === ' ') && button.getAttribute('role') === 'button') {
           event.preventDefault();
-          setCrowModalOpen(true);
+          setModalOpen(true);
         }
       });
     });
 
-    closeCrowModalButtons.forEach(function (button) {
+    document.querySelectorAll(closeSelector).forEach(function (button) {
       button.addEventListener('click', function () {
-        setCrowModalOpen(false);
+        setModalOpen(false);
       });
     });
 
     document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape' && crowModal.classList.contains('is-visible')) {
-        setCrowModalOpen(false);
+      if (event.key === 'Escape' && modal.classList.contains('is-visible')) {
+        setModalOpen(false);
       }
     });
   }
+
+  setupModal('crow-master-modal', '[data-open-crow-modal]', '[data-close-crow-modal]');
+  setupModal('anni-2810-modal', '[data-open-anni-modal]', '[data-close-anni-modal]');
 
   // Follow the system setting until the visitor makes an explicit choice
   var onSystemChange = function (event) {
