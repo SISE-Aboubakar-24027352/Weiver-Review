@@ -45,11 +45,16 @@
     }
 
     if (themeLabel) {
-      themeLabel.textContent = normalizedTheme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre';
+      themeLabel.textContent = window.WeiverI18n
+        ? window.WeiverI18n.t(normalizedTheme === 'dark' ? 'theme.light' : 'theme.dark')
+        : (normalizedTheme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre');
     }
 
     if (themeButton) {
-      themeButton.setAttribute('aria-label', normalizedTheme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre');
+      var themeAria = window.WeiverI18n
+        ? window.WeiverI18n.t(normalizedTheme === 'dark' ? 'theme.light' : 'theme.dark')
+        : (normalizedTheme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre');
+      themeButton.setAttribute('aria-label', themeAria);
     }
   }
 
@@ -209,7 +214,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     3. Formulaire de contact (validation uniquement côté client, rien n'est envoyé)
+     3. Formulaire de contact (préparation d'un e-mail, aucune donnée serveur)
      ------------------------------------------------------------------------ */
   var form = document.querySelector('[data-contact-form]');
 
@@ -222,26 +227,34 @@
       name: function (value) {
         var text = value.trim();
         if (!text) {
-          return 'Veuillez saisir votre nom.';
+          return window.WeiverI18n ? window.WeiverI18n.t('form.name.required') : 'Veuillez saisir votre nom.';
         }
-        return text.length < 2 ? 'Votre nom doit contenir au moins 2 caractères.' : '';
+        return text.length < 2
+          ? (window.WeiverI18n ? window.WeiverI18n.t('form.name.short') : 'Votre nom doit contenir au moins 2 caractères.')
+          : '';
       },
       email: function (value) {
         var text = value.trim();
         if (!text) {
-          return 'Veuillez saisir votre adresse e-mail.';
+          return window.WeiverI18n ? window.WeiverI18n.t('form.email.required') : 'Veuillez saisir votre adresse e-mail.';
         }
-        return EMAIL_PATTERN.test(text) ? '' : 'Veuillez saisir une adresse e-mail valide, par exemple nom@example.com.';
+        return EMAIL_PATTERN.test(text)
+          ? ''
+          : (window.WeiverI18n ? window.WeiverI18n.t('form.email.invalid') : 'Veuillez saisir une adresse e-mail valide, par exemple nom@example.com.');
       },
       topic: function (value) {
-        return value ? '' : 'Veuillez choisir un sujet.';
+        return value
+          ? ''
+          : (window.WeiverI18n ? window.WeiverI18n.t('form.topic.required') : 'Veuillez choisir un sujet.');
       },
       message: function (value) {
         var text = value.trim();
         if (!text) {
-          return 'Veuillez écrire un message.';
+          return window.WeiverI18n ? window.WeiverI18n.t('form.message.required') : 'Veuillez écrire un message.';
         }
-        return text.length < 20 ? 'Votre message doit contenir au moins 20 caractères.' : '';
+        return text.length < 20
+          ? (window.WeiverI18n ? window.WeiverI18n.t('form.message.short') : 'Votre message doit contenir au moins 20 caractères.')
+          : '';
       }
     };
 
@@ -299,16 +312,47 @@
         return;
       }
 
-      // Démo uniquement : aucune requête n'est effectuée. Afficher une confirmation et réinitialiser le formulaire.
+      if (form.elements.website && form.elements.website.value.trim()) {
+        if (status) {
+          status.textContent = window.WeiverI18n
+            ? window.WeiverI18n.t('form.honeypot')
+            : 'Votre demande n’a pas pu être préparée.';
+        }
+        return;
+      }
+
+      var topicLabels = {
+        'review-request': window.WeiverI18n ? window.WeiverI18n.t('topic.review') : 'Demande d’avis',
+        'feedback': window.WeiverI18n ? window.WeiverI18n.t('topic.feedback') : 'Commentaire',
+        'collaboration': window.WeiverI18n ? window.WeiverI18n.t('topic.collaboration') : 'Collaboration',
+        'other': window.WeiverI18n ? window.WeiverI18n.t('topic.other') : 'Autre'
+      };
       var firstName = form.elements.name.value.trim().split(/\s+/)[0];
+      var email = form.elements.email.value.trim();
+      var topic = topicLabels[form.elements.topic.value] || form.elements.topic.value;
+      var message = form.elements.message.value.trim();
+      var subject = '[Weiver Review] ' + topic;
+      var body = 'Nom : ' + form.elements.name.value.trim() + '\n' +
+        'E-mail : ' + email + '\n' +
+        'Sujet : ' + topic + '\n\n' +
+        message;
+      var mailto = 'mailto:weiverreview08@gmail.com?subject=' +
+        encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+
       form.reset();
       fields.forEach(function (field) {
         showError(field, '');
       });
       if (status) {
-        status.textContent = 'Merci, ' + firstName + ' ! Votre message a été validé. ' +
-          'Il s\'agit d\'une démo statique, donc rien n\'a été envoyé.';
+        status.textContent = window.WeiverI18n
+          ? window.WeiverI18n.t('form.success', { name: firstName })
+          : 'Merci, ' + firstName + ' ! Votre logiciel de messagerie va s’ouvrir. Vérifiez puis envoyez le message.';
       }
+      window.location.href = mailto;
     });
   }
+
+  document.addEventListener('weiver:languagechange', function () {
+    applyTheme(currentTheme());
+  });
 })();
