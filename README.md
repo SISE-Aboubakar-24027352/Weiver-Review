@@ -8,8 +8,9 @@ Site : [weiver-review.fr](https://weiver-review.fr/)
 
 - **Accueil** : présentation du site et sélection d’avis et d’aperçus.
 - **Avis** : fiches de jeux et fenêtres de détails.
+- **Rubriques** : pages démonstratives pour les avis PC, les jeux indépendants, les meilleurs jeux 2026 et les actualités gaming.
 - **À propos** : présentation de l’auteur et échelle de notation sur 10.
-- **Contact** : formulaire de démonstration et coordonnées de contact.
+- **Contact** : formulaire validé qui prépare un e-mail dans la messagerie de l’utilisateur.
 - **Mentions légales** et **Politique de confidentialité** : informations éditoriales et sur les données.
 
 Les contenus de démonstration comprennent notamment *Crow Master* (avis) et *Anni 2810* (aperçu basé sur les informations du studio, jeu non testé).
@@ -29,17 +30,26 @@ Aucun framework, gestionnaire de paquets, serveur applicatif, base de données o
 .
 ├── index.html          # Accueil
 ├── review.html         # Avis et aperçus des jeux
+├── avis-jeux-pc.html   # Rubrique dédiée aux avis PC
+├── jeux-independants.html
+│                       # Sélection démonstrative de jeux indépendants
+├── meilleurs-jeux-2026.html
+│                       # Classement démonstratif de 2026
+├── actualites-gaming.html
+│                       # Fil d’actualités démonstratif
 ├── aboutme.html        # Présentation et méthode de notation
 ├── contact.html        # Formulaire de démonstration et contact
 ├── mentions.html       # Mentions légales
 ├── privacy.html        # Politique de confidentialité
+├── 404.html            # Page d’erreur personnalisée
 ├── res/
 │   ├── css/
 │   │   ├── global.css  # Variables, thèmes, composants partagés
 │   │   └── style.css   # Mises en page et styles du site
 │   ├── js/
 │   │   ├── script.js   # Comportements communs aux pages
-│   │   └── index.js    # Effets propres à l’accueil
+│   │   ├── index.js    # Effets propres à l’accueil
+│   │   └── i18n.js     # Langues, traductions et sélecteur FR/EN
 │   ├── logo/
 │   │   └── logo.svg
 │   ├── images/         # Emplacement des images locales
@@ -50,7 +60,25 @@ Aucun framework, gestionnaire de paquets, serveur applicatif, base de données o
 └── sitemap.xml         # URLs du site destinées aux moteurs de recherche
 ```
 
-Les textes et fiches sont directement écrits dans les pages HTML ; il n’y a pas de catalogue de jeux séparé ni de système de gestion de contenu.
+Chaque page HTML est autonome et charge les feuilles de style communes ainsi que les scripts globaux. L’architecture reste entièrement statique : les textes, fiches de jeux et contenus éditoriaux sont écrits directement dans les pages HTML. Il n’y a ni catalogue de jeux séparé, ni base de données, ni API applicative, ni système de gestion de contenu.
+
+Les responsabilités sont séparées de la manière suivante :
+
+- `res/css/global.css` définit les variables, les thèmes, les grilles et les composants communs.
+- `res/css/style.css` contient les mises en page et adaptations propres aux différentes pages.
+- `res/js/script.js` gère les interactions communes : thème, navigation mobile, modales et formulaire de contact.
+- `res/js/index.js` contient les effets spécifiques à la page d’accueil.
+- `res/js/i18n.js` centralise les traductions françaises/anglaises, le changement de langue et la persistance de la préférence.
+- `.htaccess`, `CNAME`, `robots.txt` et `sitemap.xml` assurent respectivement les règles de serveur, le domaine personnalisé et l’indexation.
+
+## Internationalisation
+
+- **Français par défaut** : aucune préférence enregistrée ouvre le site en français.
+- **Sélecteur global** : un sélecteur `FR / EN` est injecté dans la navigation commune.
+- **Changement instantané** : aucun rechargement complet n’est nécessaire pour passer d’une langue à l’autre.
+- **Persistance** : la préférence est enregistrée dans `localStorage` sous la clé `weiver-review-language`.
+- **Traductions centralisées** : les clés, les libellés accessibles et les mappings de contenu sont regroupés dans `res/js/i18n.js`.
+- **Extensibilité** : ajouter une langue revient à l’ajouter à `SUPPORTED_LANGUAGES` et à ses traductions centrales.
 
 ## Lancer le site en local
 
@@ -73,7 +101,7 @@ Ouvrez ensuite [http://localhost:8000](http://localhost:8000). Il est également
 ## Fonctionnalités et limites
 
 - Le thème clair ou sombre suit le réglage du système et peut être changé manuellement. Le choix est conservé dans `localStorage` sous la clé `pixel-ledger-theme`.
-- Le formulaire de contact est une démonstration : il valide les champs dans le navigateur, affiche une confirmation, puis réinitialise le formulaire. **Il n’envoie ni ne stocke aucun message.**
+- Le formulaire de contact valide les champs dans le navigateur, puis ouvre un lien `mailto:` prérempli. **Le site ne reçoit ni ne stocke aucun message** ; l’envoi reste sous le contrôle de l’utilisateur dans son logiciel de messagerie.
 - Des effets d’animation sont désactivés lorsque le navigateur indique une préférence pour la réduction des animations.
 - Certaines images de jeux sont chargées depuis `flexarion-jeu.fr` et `flexarion-studio.fr`; leur affichage dépend donc de ces services externes.
 - Le site contient des métadonnées SEO, des données structurées, un fichier sitemap et un fichier `robots.txt`.
