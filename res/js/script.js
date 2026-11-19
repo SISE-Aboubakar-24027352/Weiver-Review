@@ -126,6 +126,7 @@
 
   setupModal('crow-master-modal', '[data-open-crow-modal]', '[data-close-crow-modal]');
   setupModal('anni-2810-modal', '[data-open-anni-modal]', '[data-close-anni-modal]');
+  setupModal('backlog-modal', '[data-open-backlog-modal]', '[data-close-backlog-modal]');
 
   // Follow the system setting until the visitor makes an explicit choice
   var onSystemChange = function (event) {
