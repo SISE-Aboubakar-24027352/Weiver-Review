@@ -39,6 +39,26 @@
             { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://weiver-review.fr/" },
             { "@type": "ListItem", "position": 2, "name": "Avis", "item": "https://weiver-review.fr/review.html" }
           ]
+        },
+        {
+          "@type": "VideoGame",
+          "name": "Backlog",
+          "url": "https://flexarion.fr/",
+          "image": "https://weiver-review.fr/res/images/backlog-terminal.webp",
+          "description": "Développé à Aix-en-Provence par Studio Flexarion, Backlog est un jeu d'espionnage narratif et d'investigation en interface en ligne de commande (slow-gaming).",
+          "genre": ["Espionnage narratif", "Investigation tactique", "Jeu indépendant"],
+          "gamePlatform": ["PC", "Steam Deck"],
+          "operatingSystem": ["Windows", "Linux", "macOS"],
+          "author": {
+            "@type": "Organization",
+            "name": "Studio Flexarion",
+            "alternateName": "Flexarion",
+            "url": "https://flexarion.fr/",
+            "location": {
+              "@type": "Place",
+              "name": "Aix-en-Provence"
+            }
+          }
         }
       ]
     }
@@ -152,6 +172,25 @@
               <button class="button button--tonal card__toggle" type="button" data-open-anni-modal>Découvrir</button>
             </div>
           </article>
+          <article class="card" id="backlog">
+            <div class="card__cover">
+              <img class="card__art" src="res/images/backlog-terminal.webp" alt="Capture d'écran de l'interface en ligne de commande du jeu d'espionnage narratif Backlog développé par Studio Flexarion" width="320" height="180" loading="lazy">
+            </div>
+            <div class="card__body">
+              <h2>Backlog</h2>
+              <p><span class="chip chip--tonal">Aperçu avant sortie · jeu non testé</span></p>
+              <ul class="card__meta">
+                <li class="chip"><span class="visually-hidden">Genre : </span>Espionnage narratif · Terminal (slow-gaming)</li>
+                <li class="chip"><span class="visually-hidden">Plateforme : </span>PC (Windows, Linux, macOS) · Steam Deck</li>
+                <li class="chip"><span class="visually-hidden">Studio : </span>Flexarion · Aix-en-Provence</li>
+              </ul>
+              <p class="card__comment">Développé à Aix-en-Provence par Studio Flexarion, Backlog est un jeu d'espionnage narratif et d'investigation qui se joue directement à travers une interface en ligne de commande. Vous incarnez un analyste chargé de fouiller des archives numériques, croiser des indices et décrypter des communications sensibles à votre rythme.</p>
+              <div class="modal__actions">
+                <a class="button button--filled" href="https://flexarion.fr/" target="_blank" rel="noopener noreferrer">Studio Flexarion<span class="visually-hidden"> (ouvre un nouvel onglet)</span></a>
+                <button class="button button--tonal card__toggle" type="button" data-open-backlog-modal>Détails</button>
+              </div>
+            </div>
+          </article>
         </div>
 
       </div>
@@ -236,6 +275,32 @@
       <div class="modal__actions">
         <a class="button button--filled" href="https://flexarion-studio.fr/jeux.html" target="_blank" rel="noopener noreferrer">Voir la fiche du studio<span class="visually-hidden"> (ouvre un nouvel onglet)</span></a>
         <button class="button button--outlined" type="button" data-close-anni-modal>Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="backlog-modal" aria-hidden="true">
+    <div class="modal__backdrop" data-close-backlog-modal aria-hidden="true"></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="backlog-modal-title">
+      <button class="modal__close" type="button" aria-label="Fermer la fenêtre" data-close-backlog-modal>&times;</button>
+      <p class="chip chip--tonal">Aperçu avant sortie · jeu non testé</p>
+      <h2 id="backlog-modal-title">Backlog — Studio Flexarion</h2>
+      <p class="modal__description">Développé à Aix-en-Provence par Studio Flexarion, Backlog est un jeu d'espionnage narratif et d'investigation qui se joue directement à travers une interface en ligne de commande. Vous incarnez un analyste chargé de fouiller des archives numériques, croiser des indices et décrypter des communications sensibles à votre rythme.</p>
+      <h3 class="verdict__title">Atouts annoncés</h3>
+      <ul class="modal__list">
+        <li>Ambiance immersive façon terminal rétro-informatique</li>
+        <li>Écriture soignée axée sur la déduction et la réflexion (slow-gaming)</li>
+        <li>Légèreté technique compatible nativement Linux et Steam Deck</li>
+      </ul>
+      <h3 class="verdict__title">Points à surveiller</h3>
+      <ul class="modal__list">
+        <li>Rythme volontairement posé qui demande de la lecture et de l'observation</li>
+        <li>Interface textuelle exigeante pour les joueurs habitués à l'action immédiate</li>
+      </ul>
+      <p class="modal__description">Jeu indépendant sur PC (Windows, Linux, macOS) et Steam Deck par Flexarion (Aix-en-Provence).</p>
+      <div class="modal__actions">
+        <a class="button button--filled" href="https://flexarion.fr/" target="_blank" rel="noopener noreferrer">Studio Flexarion<span class="visually-hidden"> (ouvre un nouvel onglet)</span></a>
+        <button class="button button--outlined" type="button" data-close-backlog-modal>Fermer</button>
       </div>
     </div>
   </div>
